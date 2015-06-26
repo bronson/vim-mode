@@ -4,7 +4,7 @@ _ = require 'underscore-plus'
 
 describe "pane motions", ->
   [editor, editorElement, vimState] = []
-  
+
   beforeEach ->
     vimMode = atom.packages.loadPackage('vim-mode')
     vimMode.activateResources()
@@ -23,37 +23,13 @@ describe "pane motions", ->
   describe "the ctrl-^ keybinding", ->
     [pane, recentEditor, item1, item2] = []
 
-    # this class is copied from http://github.com/atom/tabs/blob/master/spec/tabs-spec.coffee
-    class TestView extends View
-      @deserialize: ({title, longTitle, iconName}) -> new TestView(title, longTitle, iconName)
-      @content: (title) -> @div title
-      initialize: (@title, @longTitle, @iconName) ->
-      getTitle: -> @title
-      getLongTitle: -> @longTitle
-      getIconName: -> @iconName
-      serialize: -> {deserializer: 'TestView', @title, @longTitle, @iconName}
-      onDidChangeTitle: (callback) ->
-        @titleCallbacks ?= []
-        @titleCallbacks.push(callback)
-        dispose: => _.remove(@titleCallbacks, callback)
-      emitTitleChanged: ->
-        callback() for callback in @titleCallbacks ? []
-      onDidChangeIcon: (callback) ->
-        @iconCallbacks ?= []
-        @iconCallbacks.push(callback)
-        dispose: => _.remove(@iconCallbacks, callback)
-      emitIconChanged: ->
-        callback() for callback in @iconCallbacks ? []
-      onDidChangeModified: -> # to suppress deprecation warning
-        dispose: ->
-
     beforeEach ->
-      deserializerDisposable = atom.deserializers.add(TestView)
-      item1 = new TestView('Item 1')
-      item2 = new TestView('Item 2')
       pane = atom.workspace.getActivePane()
+      item1 = new TextEditor()   # need to mock this?
       pane.addItem(item1)
       pane.activateItem(item1)
+      # probably need to set item1.lastOpened since it will be the same as item2's
+      item2 = new TextEditor()
       pane.addItem(item2)
       pane.activateItem(item2)
 
